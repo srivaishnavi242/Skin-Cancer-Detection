@@ -1,152 +1,123 @@
-# Skin Cancer Detection
+# Skin Cancer Detection using 3D-TBP and Deep Learning
 
-Welcome to the Skin Cancer Detection repository! This project leverages machine learning and deep learning techniques to classify skin lesions as benign or malignant using dermatoscopic images. It aims to aid dermatologists and healthcare professionals in early and accurate detection of skin cancer, potentially saving lives.
+Skin cancer is one of the most prevalent cancers worldwide. Early and accurate detection is crucial for improving treatment outcomes. This project integrates 3D Total Body Photography (3D-TBP) and deep learning techniques to classify skin lesions as benign or malignant using dermoscopic images and metadata.
 
-## Table of Contents
+## 🔍 Project Overview
 
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Dataset](#dataset)
-- [Model Architecture](#model-architecture)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Evaluation](#evaluation)
-- [Results](#results)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+This repository presents three deep learning models developed and evaluated for skin cancer classification:
+- Artificial Neural Network (ANN)
+- VGG19 (Transfer Learning)
+- Combined CNN-ANN Hybrid Model
 
----
+Models are trained on the ISIC 2024 dataset and SLICE-3D lesion crops, featuring high-resolution images and metadata.
 
-## Project Overview
+## 🚀 Features
 
-Skin cancer is one of the most common cancers worldwide. Early detection is crucial for successful treatment. This project utilizes state-of-the-art deep learning models (such as CNNs, ResNet, or EfficientNet) to classify skin lesion images. The application is intended for educational and research purposes.
+- Classification of skin lesions as benign or malignant  
+- 3D-TBP data integration using SLICE-3D  
+- Multiple deep learning architectures with comparative analysis  
+- Data augmentation and preprocessing pipeline  
+- Performance visualization with confusion matrix, ROC-AUC, precision, recall, and F1-score  
+- CLI and optional web interface (Streamlit/Flask) for inference
 
-## Features
+## 📂 Dataset
 
-- Automatic classification of skin lesion images into benign and malignant.
-- Data augmentation and preprocessing pipeline for robust training.
-- Transfer learning using pre-trained models.
-- Model evaluation using accuracy, precision, recall, F1-score, and ROC-AUC.
-- Visualization of predictions and model performance.
-- Easy-to-use CLI or web interface for inference.
+### ISIC Dataset
+- Images: ~25,000 JPEG images  
+- Metadata: Age, sex, lesion location, and diagnosis  
+- Labels: Benign or Malignant
 
-## Dataset
+### SLICE-3D Dataset
+- Cropped lesions from 3D-TBP images using Vectra WB360  
+- Includes both histopathologically validated and clinically assumed labels
 
-The project uses the [ISIC Skin Lesion Dataset](https://isic-archive.com/) or a similar open dataset. The dataset consists of high-resolution dermatoscopic images labeled by dermatologists.
+> **Note:** Please download the datasets manually from official sources and place them in the `/data` directory.
 
-- *Number of Images:* ~25,000
-- *Classes:* Benign, Malignant
-- *Format:* JPEG/PNG images and CSV metadata
+## 🏗️ Model Architectures
 
-*Note:* Please download the dataset from the official source and place it in the data/ directory.
+### ANN Model (3D Tensor-Based)
+- Uses 3D convolutional layers for volumetric image processing  
+- Dense layers for classification  
+- Dropout and batch normalization for generalization
 
-## Model Architecture
+### VGG19 (Transfer Learning)
+- Pretrained on ImageNet  
+- Convolutional base frozen, custom dense layers trained for binary classification
 
-The model is built using deep convolutional neural networks. Common architectures used include:
+### Combined CNN-ANN
+- CNN for feature extraction  
+- ANN for decision-making  
+- Best overall performance with strong generalization
 
-- ResNet50
-- EfficientNetB0/B3
-- Custom CNN
+## 📊 Evaluation Metrics
 
-The model pipeline includes:
-
-1. Image preprocessing and augmentation.
-2. Feature extraction using transfer learning.
-3. Classification head (Dense layers with softmax/sigmoid activation).
-
-## Installation
-
-1. *Clone the repository:*
-   bash
-   git clone https://github.com/Ritupriya17/Skin-Cancer-Detection.git
-   cd Skin-Cancer-Detection
-   
-
-2. *Set up a virtual environment:*
-   bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   
-
-3. *Install dependencies:*
-   bash
-   pip install -r requirements.txt
-   
-
-4. *Download the dataset:*
-   - Download from the official ISIC Archive or the provided link.
-   - Place images in the data/ folder.
-
-## Usage
-
-### Training the Model
-
-Configure parameters in config.yaml (if available) or edit the training script.
-
-bash
-python train.py --epochs 50 --batch-size 32 --model resnet50
-
-
-### Inference
-
-To make predictions on new images:
-
-bash
-python predict.py --image path/to/image.jpg
-
-
-### Web Interface
-
-If a web interface is available (e.g., using Streamlit or Flask):
-
-bash
-streamlit run app.py
-# or
-python app.py
-
-Then open the provided local URL in your browser.
-
-## Evaluation
-
-The model is evaluated using:
-
-- Accuracy
-- Precision, Recall, F1-score
-- ROC-AUC
+- Accuracy  
+- Precision  
+- Recall  
+- F1-Score  
+- ROC-AUC  
 - Confusion Matrix
 
-Example:
+## ⚙️ Installation & Setup
 
-bash
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/skin-cancer-3dtbp.git
+cd skin-cancer-3dtbp
+
+# Create a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download datasets and place in /data
+```
+
+## 🏋️‍♂️ Training
+
+Train any model by specifying the architecture, number of epochs, batch size, and other parameters:
+
+```bash
+python train.py --model vgg19 --epochs 30 --batch-size 32
+```
+
+
+## 🧪 Evaluation
+
+Evaluate a saved model on your test set:
+
+```bash
 python evaluate.py --model saved_model.h5 --test-dir data/test
+```
 
-
-## Results
+## 📈 Results Summary
 
 | Model         | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
 |---------------|----------|-----------|--------|----------|---------|
-| ResNet50      | 0.89     | 0.88      | 0.87   | 0.87     | 0.92    |
-| EfficientNetB0| 0.91     | 0.90      | 0.89   | 0.89     | 0.94    |
+| ANN           | 78%      | 0.76      | 0.77   | 0.76     | 0.85    |
+| VGG19         | 85%      | 0.84      | 0.85   | 0.84     | 0.92    |
+| Combined CNN  | 87%      | 0.86      | 0.87   | 0.86     | 0.93    |
 
-Results may vary depending on dataset and hyperparameters.
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please open issues and pull requests for bug fixes, enhancements, or new features.
+Contributions are welcome! If you'd like to improve the project, add a new model, enhance the interface, or extend functionality:
 
-1. Fork the repository.
-2. Create your feature branch: git checkout -b feature/YourFeature
-3. Commit your changes: git commit -am 'Add new feature'
-4. Push to the branch: git push origin feature/YourFeature
-5. Open a pull request.
+1. Fork the repository
+2. Create a new branch  
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes  
+   ```bash
+   git commit -m 'Add some feature'
+   ```
+4. Push to the branch  
+   ```bash
+   git push origin feature-name
+   ```
+5. Open a Pull Request
 
-## License
-
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
-
-## Acknowledgements
-
-- [ISIC Archive](https://isic-archive.com/) for the dataset.
-- [TensorFlow](https://www.tensorflow.org/), [PyTorch](https://pytorch.org/), and [scikit-learn](https://scikit-learn.org/) for ML frameworks.
-- All contributors and the open-source community.
+---
